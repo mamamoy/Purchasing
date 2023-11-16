@@ -40,7 +40,7 @@
         })(window, document, "script", "dataLayer", "GTM-NXZMQSS");
     </script>
     <!-- End Google Tag Manager -->
-
+    @livewireStyles
     @stack('stylesheets')
 </head>
 
@@ -182,46 +182,7 @@
                 </div>
             </div>
 
-            @if (Auth::guard('admin')->check())
-                <div class="user-info-dropdown">
-                    <div class="dropdown">
-                        <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
-                            <span class="user-icon">
-                                <img src="{{ asset('assets/vendors/images/photo1.jpg') }}" alt="" />
-                            </span>
-                            <span class="user-name">Ross C. Lopez</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
-                            <a class="dropdown-item" href="profile.html"><i class="dw dw-user1"></i> Profile</a>
-                            <a class="dropdown-item" href="profile.html"><i class="dw dw-settings2"></i> Setting</a>
-                            <a class="dropdown-item" href="faq.html"><i class="dw dw-help"></i> Help</a>
-                            <a class="dropdown-item" href="{{ route('admin.logout_handler') }}"
-                                onclick="event.preventDefault();document.getElementById('adminLogoutForm').submit();"><i
-                                    class="dw dw-logout"></i> Log Out</a>
-                        </div>
-                        <form action="{{ route('admin.logout_handler') }}" id="adminLogoutForm" method="POST">
-                            @csrf
-                        </form>
-                    </div>
-                </div>
-            @elseif (Auth::guard('seller')->check())
-                <div class="user-info-dropdown">
-                    <div class="dropdown">
-                        <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
-                            <span class="user-icon">
-                                <img src="{{ asset('assets/vendors/images/photo1.jpg') }}" alt="" />
-                            </span>
-                            <span class="user-name">Ross C. Lopez</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
-                            <a class="dropdown-item" href="profile.html"><i class="dw dw-user1"></i> Profile</a>
-                            <a class="dropdown-item" href="profile.html"><i class="dw dw-settings2"></i> Setting</a>
-                            <a class="dropdown-item" href="faq.html"><i class="dw dw-help"></i> Help</a>
-                            <a class="dropdown-item" href="login.html"><i class="dw dw-logout"></i> Log Out</a>
-                        </div>
-                    </div>
-                </div>
-            @endif
+            @livewire('admin-seller-header-profile-info')
 
 
             <div class="github-link">
@@ -366,7 +327,7 @@
                             <div class="sidebar-small-cap">Setting</div>
                         </li>
                         <li>
-                            <a href="" target="_blank" class="dropdown-toggle no-arrow">
+                            <a href="{{ route('admin.profile') }}" class="dropdown-toggle no-arrow {{ Route::is('admin.profile') ? 'active' : '' }}">
                                 <span class="micon bi bi-person-badge"></span>
                                 <span class="mtext">Profile</span>
                             </a>
@@ -411,39 +372,7 @@
     <div class="main-container">
         <div class="pd-ltr-20 xs-pd-20-10">
             <div class="min-height-200px">
-                <div class="page-header">
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <div class="title">
-                                <h4>blank</h4>
-                            </div>
-                            <nav aria-label="breadcrumb" role="navigation">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item">
-                                        <a href="index.html">Home</a>
-                                    </li>
-                                    <li class="breadcrumb-item active" aria-current="page">
-                                        blank
-                                    </li>
-                                </ol>
-                            </nav>
-                        </div>
-                        <div class="col-md-6 col-sm-12 text-right">
-                            <div class="dropdown">
-                                <a class="btn btn-primary dropdown-toggle" href="#" role="button"
-                                    data-toggle="dropdown">
-                                    January 2018
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="#">Export List</a>
-                                    <a class="dropdown-item" href="#">Policies</a>
-                                    <a class="dropdown-item" href="#">View Assets</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="pd-20 bg-white border-radius-4 box-shadow mb-30">
+                <div>
                     @yield('content')
                 </div>
             </div>
@@ -467,6 +396,7 @@
             });
         }
     </script>
+    @livewireScripts
     @stack('scripts')
 </body>
 

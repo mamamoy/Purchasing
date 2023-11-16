@@ -13,8 +13,9 @@ Route::prefix('admin')->name('admin.')->group(function(){
         Route::get('/password/reset/{token}', [AdminController::class, 'resetPassword'])->name('reset-password');
         Route::post('reset-password-handler', [AdminController::class, 'resetPasswordHandler'])->name('reset-password-handler');
     });
-
+    
     Route::middleware(['auth:admin', 'PreventBackHistory'])->group(function(){
+        Route::get('/profile', [AdminController::class, 'profileView'])->name('profile');
         Route::view('/home', 'back.pages.admin.home')->name('home');
         Route::post('/logout_handler', [AdminController::class, 'logoutHandler'])->name('logout_handler');
     });

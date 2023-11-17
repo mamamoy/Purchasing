@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Admin;
 
 class AdminSellerHeaderProfileInfo extends Component
 {
@@ -12,7 +12,7 @@ class AdminSellerHeaderProfileInfo extends Component
     public $seller;
 
     public $listener = [
-        'updateAdminSellerHeaderInfo' =>'$refresh'
+        'updateAdminSellerHeaderInfo' => '$refresh'
     ];
 
     public function mount(){

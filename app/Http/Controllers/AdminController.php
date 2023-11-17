@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
-
+use Illuminate\Support\Facades\File;
 
 class AdminController extends Controller
 {
@@ -128,7 +128,7 @@ class AdminController extends Controller
 
             if ($diffMins > constDefault::tokenExpiredMinutes) {
                 session()->flash('fail', 'Token is expired!, please request another password link');
-                return redirect()->route('admin.forgot-password', ['token'=> $token]);
+                return redirect()->route('admin.forgot-password', ['token' => $token]);
             } else {
                 return view('back.pages.admin.auth.reset-password')->with(['token' => $token]);
             }
@@ -138,7 +138,8 @@ class AdminController extends Controller
         }
     }
 
-    public function resetPasswordHandler(Request $request){
+    public function resetPasswordHandler(Request $request)
+    {
         $request->validate([
             'new_password' => 'required|min:5|max:45|required_with:new_password_confirmation|same:new_password_confirmation',
             'new_password_confirmation' => 'required'
@@ -146,44 +147,70 @@ class AdminController extends Controller
 
         $token = DB::table('password_reset_tokens')->where(['token' => $request->token, 'guard' => constGuards::ADMIN])->first();
 
-        $admin = Admin::where('email' , $token->email)->first();
+        $admin = Admin::where('email', $token->email)->first();
 
         Admin::where('email', $admin->email)->update([
             'password' => Hash::make($request->new_password)
         ]);
 
         DB::table('password_reset_tokens')->where([
-            'email'=> $admin->email,
+            'email' => $admin->email,
             'token' => $request->token,
             'guard' => constGuards::ADMIN
-            ])->delete();
+        ])->delete();
 
-            $data = array(
-                'admin' => $admin,
-                'new_password' => $request->new_password
-            );
+        $data = array(
+            'admin' => $admin,
+            'new_password' => $request->new_password
+        );
 
-            $mail_body = view('email-templates.admin-reset-email-template', $data)->render();
+        $mail_body = view('email-templates.admin-reset-email-template', $data)->render();
 
-            $mailConfig = array(
-                'mail_from_email' => env('EMAIL_FROM_ADDRESS'),
-                'mail_from_name' => env('MAIL_FROM_NAME'),
-                'mail_recipient_email'=> $admin->email,
-                'mail_recipient_name' => $admin->name,
-                'mail_subject' => 'Password changed',
-                'mail_body' => $mail_body
-            );
+        $mailConfig = array(
+            'mail_from_email' => env('EMAIL_FROM_ADDRESS'),
+            'mail_from_name' => env('MAIL_FROM_NAME'),
+            'mail_recipient_email' => $admin->email,
+            'mail_recipient_name' => $admin->name,
+            'mail_subject' => 'Password changed',
+            'mail_body' => $mail_body
+        );
 
-            sendEmail($mailConfig);
-            return redirect()->route('admin.login')->with('success', 'Done!, Your password has been changed. Use new password to login into system.');
+        sendEmail($mailConfig);
+        return redirect()->route('admin.login')->with('success', 'Done!, Your password has been changed. Use new password to login into system.');
     }
-    
-    public function profileView(Request $request){
+
+    public function profileView(Request $request)
+    {
         $admin = null;
-        if (Auth::guard('admin')->check()){
+        if (Auth::guard('admin')->check()) {
             $admin = Admin::findOrFail(auth()->id());
         }
 
         return view('back.pages.admin.profile', compact('admin'));
+    }
+
+    public function changeProfilePicture(Request $request)
+    {
+        $admin = Admin::findOrFail(auth('admin')->id());
+        $path = 'images/users/admins/';
+        $file = $request->file('adminProfilePictureFile');
+        $old_picture = $admin->getAttributes()['picture'];
+        $file_path = $path . $old_picture;
+        $filename = '/ADMIN_IMG_' . rand(2, 1000) . $admin->id . time() . uniqid() . '.jpg';
+
+        $upload = $file->move(public_path($path), $filename);
+
+        if ($upload) {
+            if ($old_picture != null && File::exists(public_path($file_path))) {
+                File::delete(public_path($file_path));
+            }
+            $admin->update([
+                'picture' => $filename
+            ]);
+
+            return response()->json(['status' => 1, 'msg' => 'Your profile picture has been successfully updated.']);
+        } else {
+            return response()->json(['status' => 0, 'msg' => 'Something went wrong.']);
+        }
     }
 }

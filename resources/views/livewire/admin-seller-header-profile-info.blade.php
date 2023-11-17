@@ -4,9 +4,9 @@
             <div class="dropdown">
                 <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
                     <span class="user-icon">
-                        <img src="{{ $admin->picture }}" alt="" />
+                        <img src="{{ $admin->picture }}" alt="" id="adminHeaderPicture"/>
                     </span>
-                    <span class="user-name">{{$admin->name}}</span>
+                    <span class="user-name" id="adminHeaderName">{{$admin->name}}</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
                     <a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="dw dw-user1"></i>

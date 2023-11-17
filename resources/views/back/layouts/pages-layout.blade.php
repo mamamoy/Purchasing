@@ -40,6 +40,8 @@
         })(window, document, "script", "dataLayer", "GTM-NXZMQSS");
     </script>
     <!-- End Google Tag Manager -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="{{asset('assets/ijaboCropTool/ijaboCropTool.min.css')}}">
     @livewireStyles
     @stack('stylesheets')
 </head>
@@ -388,6 +390,8 @@
     <script src="{{ asset('assets/vendors/scripts/script.min.js') }}"></script>
     <script src="{{ asset('assets/vendors/scripts/process.js') }}"></script>
     <script src="{{ asset('assets/vendors/scripts/layout-settings.js') }}"></script>
+    <script src="{{asset('assets/ijaboCropTool/ijaboCropTool.min.js')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
         if (navigator.userAgent.indexOf("Firefox") != -1) {
             history.pushState(null, null, document.URL);
